@@ -1,0 +1,76 @@
+package exam;
+
+
+import java.lang.annotation.Retention;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.TreeSet;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Threading implements Runnable{
+
+	Thread t1,t2;
+	Threading (){
+		t1=new Thread(this);
+		t2=new Thread(this);
+		t1.setName("produce");
+		t2.setName("consume");
+		t1.start();
+		t2.start();
+	}
+	
+	
+	public  List<Integer> list =  new ArrayList<Integer>();
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		 new Threading();
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		ReentrantLock lock= new ReentrantLock();
+		Condition c=lock.newCondition();
+		Thread currentthread = Thread.currentThread();
+		if(currentthread.getName().equals("produce"))
+		{
+				
+			Random rs= new Random();
+			
+			
+			for (int j=0;j<10;j++)
+			{
+				int i=rs.nextInt(400);
+				list.add(i);
+				
+			}
+			
+			
+		
+			
+		
+		}
+		
+		else if(currentthread.getName().equals("consume"))
+		{
+	
+			try {
+				t2.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Iterator<Integer> itr=list.iterator();
+			{
+				while(itr.hasNext());
+				System.out.println(itr.next());
+			}
+			
+		}
+		
+	}
+
+}

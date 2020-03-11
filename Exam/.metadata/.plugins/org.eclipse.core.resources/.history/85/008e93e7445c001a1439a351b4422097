@@ -1,0 +1,78 @@
+package exam;
+
+import java.util.TreeSet;
+import java.util.function.Consumer;
+
+class Account implements Comparable {
+
+	String name;
+	int id, balance;
+
+	public Account(String name, int id, int balance) {
+		super();
+		this.name = name;
+		this.id = id;
+		this.balance = balance;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [name=" + name + ", id=" + id + ", balance=" + balance + "]";
+	}
+
+	@Override
+	public int compareTo(Object d) {
+		Account acc = (Account) d;
+		if(this.balance > acc.balance)
+			return 1;	
+		
+		return 0;
+	}
+
+}
+
+public class Acc {
+	public static TreeSet<Account> list = new TreeSet<Account>();
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		list.add(new Account("abc",1,1000));
+		list.add(new Account("def",2,2000));
+		list.add(new Account("ghi",3,3000));
+		
+		Consumer<TreeSet<Account>> modify =list -> {
+			for (Account print:list)
+			System.out.println(print);
+		};
+		
+		
+		modify.accept(list);
+		
+	
+	}
+
+}

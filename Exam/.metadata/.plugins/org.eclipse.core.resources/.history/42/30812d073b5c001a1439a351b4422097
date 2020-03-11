@@ -1,0 +1,123 @@
+package exam;
+
+import java.io.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.lang.annotation.RetentionPolicy;
+
+// @Retention(RUNTIME)  *For runtime Retention annotation are serialized.*
+@Target({ ElementType.METHOD })
+@interface customAnnotation { 								 //Custom Annotation
+	String abc = "custom";
+}
+
+class AnnotationNotPersistedException extends Exception {  	//Custom Exception 
+	String message = "";
+
+	AnnotationNotPersistedException() {
+		this.message = message;
+	}
+
+	AnnotationNotPersistedException(String message) {
+		this.message = message;
+	}
+
+	@Override
+	public String toString() {
+		return "AnnotationNotPersistedException [message=" + message + "]";
+	}
+
+}
+
+public class Employee {
+
+	static int id;
+	String name;
+	double salary;
+
+	public Employee(int id, String name, double salary) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+	}
+
+	@customAnnotation
+	public static int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@customAnnotation
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@customAnnotation
+	public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", salary=" + salary + "]";
+	}
+
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+
+		Employee e = new Employee(10, "sanket", 10.0);
+
+		FileOutputStream fos = new FileOutputStream("F://ibm//orders.dat");
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		oos.writeObject(e.getId());
+		oos.writeObject(e.getName());
+		oos.writeObject(e.getSalary());
+		oos.flush();
+		fos.flush();
+		oos.close();
+		fos.close();
+
+		FileInputStream fis = new FileInputStream("F://ibm//orders.dat");
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		int id = ois.readInt();
+		double salary = ois.readDouble();
+		String name = ois.readUTF();
+		System.out.println("id =" + id + "salary=" + salary + "name=" + name);
+		ois.close();
+		fis.close();
+
+		Class c = Class.forName("Employee");
+		Annotation a[] = c.getDeclaredAnnotations();
+		checkAnnotations((Employee[]) a);
+
+	}
+
+	static void checkAnnotations(Employee ee[]) throws AnnotationNotPersistedException {
+		for (int i = 0; i < ee.length; i++) {
+			if (ee.length == 0)
+				throw new AnnotationNotPersistedException();
+			else {
+				System.out.println("Annotations are present");
+			}
+		}
+
+	}
+
+}
+
+
+// Obsersed :
+//Using Runtime retention policy , annotations were recorded and retained at runtime.
+// Using SOURCE retention policy annotations were discarded.
